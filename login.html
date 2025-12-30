@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Krishna Health Care - Admin Login</title>
+</head>
+<body style="font-family:Arial;text-align:center;margin-top:100px">
+
+<h2>Krishna Health Care Services</h2>
+<h3>Admin Login</h3>
+
+<input id="u" placeholder="Username"><br><br>
+<input id="p" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
+<script>
+function login(){
+  if(u.value==="admin" && p.value==="1234"){
+    localStorage.setItem("login","yes");
+    window.location.href="dashboard.html";
+  }else{
+    alert("Wrong Username or Password");
+  }
+}
+</script>
+
+</body>
+</html>

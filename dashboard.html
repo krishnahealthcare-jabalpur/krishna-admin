@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Patient Admin Panel</title>
+</head>
+<body style="font-family:Arial;padding:20px">
+
+<h2>Krishna Patient Follow-up Dashboard</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+<tr>
+  <th>Name</th>
+  <th>Mobile</th>
+  <th>Test</th>
+  <th>Due Date</th>
+  <th>Status</th>
+  <th>Call</th>
+  <th>WhatsApp</th>
+</tr>
+<tbody id="data"></tbody>
+</table>
+
+<script>
+if(localStorage.getItem("login")!=="yes"){
+  location.href="login.html";
+}
+
+fetch("https://script.google.com/macros/s/AKfycbwLrmn4e4-UfwEoCsiim06kxM65GtNzPczferTkJvepD8TPvG2fRn04ibF2ntGiyafi/exec")
+.then(r=>r.json())
+.then(d=>{
+  let out="";
+  d.forEach(p=>{
+    if(p.status==="DUE"){
+      out+=`<tr>
+      <td>${p.name}</td>
+      <td>${p.mobile}</td>
+      <td>${p.test}</td>
+      <td>${p.dueDate}</td>
+      <td>${p.status}</td>
+      <td><a href="tel:${p.mobile}">📞 Call</a></td>
+      <td><a target="_blank" href="https://wa.me/91${p.mobile}?text=Dear ${p.name}, aapka repeat test due ho chuka hai. Krishna Health Care Services">💬 WhatsApp</a></td>
+      </tr>`;
+    }
+  });
+  document.getElementById("data").innerHTML=out;
+});
+</script>
+
+</body>
+</html>
