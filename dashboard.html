@@ -16,6 +16,10 @@
   <th>Status</th>
   <th>Call</th>
   <th>WhatsApp</th>
+  <td>Address</th>
+  <td>Total</th>
+  <td>Paid</th>
+  <td>Balance</th>
 </tr>
 <tbody id="data"></tbody>
 </table>
@@ -35,6 +39,10 @@ fetch("https://script.google.com/macros/s/AKfycbwLrmn4e4-UfwEoCsiim06kxM65GtNzPc
       <td>${p.name}</td>
       <td>${p.mobile}</td>
       <td>${p.test}</td>
+      <td>${p.address}</td>
+      <td>${p.total}</td>
+      <td>${p.paid}</td>
+      <td>${p.test- p.paid}</td>
       <td>${p.dueDate}</td>
       <td>${p.status}</td>
       <td><a href="tel:${p.mobile}">📞 Call</a></td>
@@ -48,3 +56,4 @@ fetch("https://script.google.com/macros/s/AKfycbwLrmn4e4-UfwEoCsiim06kxM65GtNzPc
 
 </body>
 </html>
+
