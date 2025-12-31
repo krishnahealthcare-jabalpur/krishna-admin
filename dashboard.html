@@ -1,59 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Patient Admin Panel</title>
+<meta charset="UTF-8">
+<title>Krishna Patient Follow-up Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f6f8;
+  padding:20px;
+}
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#ffffff;
+}
+th, td{
+  border:1px solid #ccc;
+  padding:8px;
+  font-size:14px;
+  text-align:center;
+}
+th{
+  background:#0d6efd;
+  color:white;
+}
+.status-ok{
+  background:#198754;
+  color:white;
+  padding:4px 8px;
+  border-radius:6px;
+}
+.status-due{
+  background:#dc3545;
+  color:white;
+  padding:4px 8px;
+  border-radius:6px;
+}
+a{
+  text-decoration:none;
+  font-weight:bold;
+}
+</style>
 </head>
-<body style="font-family:Arial;padding:20px">
+
+<body>
 
 <h2>Krishna Patient Follow-up Dashboard</h2>
 
-<table border="1" cellpadding="8" cellspacing="0">
+<table>
+<thead>
 <tr>
   <th>Name</th>
   <th>Mobile</th>
   <th>Test</th>
   <th>Due Date</th>
   <th>Status</th>
+  <th>Address</th>
+  <th>Total</th>
+  <th>Paid</th>
+  <th>Balance</th>
   <th>Call</th>
   <th>WhatsApp</th>
-  <td>Address</th>
-  <td>Total</th>
-  <td>Paid</th>
-  <td>Balance</th>
 </tr>
-<tbody id="data"></tbody>
+</thead>
+
+<tbody id="tableBody">
+<tr>
+  <td colspan="11">Loading...</td>
+</tr>
+</tbody>
 </table>
 
 <script>
-if(localStorage.getItem("login")!=="yes"){
-  location.href="login.html";
-}
+const API_URL =
+"https://script.google.com/macros/s/AKfycbyjCBooVEvQ0g3jNq8YxLOmK61w3jyb_GvrU6V5ZbcJFI5Q-94AigvZ7UbhjPlf7WLG/exec";
 
-fetch("https://script.google.com/macros/s/AKfycbwLrmn4e4-UfwEoCsiim06kxM65GtNzPczferTkJvepD8TPvG2fRn04ibF2ntGiyafi/exec")
-.then(r=>r.json())
-.then(d=>{
-  let out="";
-  d.forEach(p=>{
-    if(p.status==="DUE"){
-      out+=`<tr>
-      <td>${p.name}</td>
-      <td>${p.mobile}</td>
-      <td>${p.test}</td>
-      <td>${p.address}</td>
-      <td>${p.total}</td>
-      <td>${p.paid}</td>
-      <td>${p.test- p.paid}</td>
-      <td>${p.dueDate}</td>
-      <td>${p.status}</td>
+fetch(API_URL)
+.then(res => res.json())
+.then(data => {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+
+  data.forEach(p => {
+    const total = Number(p.total) || 0;
+    const paid = Number(p.paid) || 0;
+    const balance = total - paid;
+
+    const statusClass = (p.status === "OK") ? "status-ok" : "status-due";
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${p.name || ""}</td>
+      <td>${p.mobile || ""}</td>
+      <td>${p.test || ""}</td>
+      <td>${p.dueDate ? new Date(p.dueDate).toLocaleDateString() : ""}</td>
+      <td><span class="${statusClass}">${p.status || ""}</span></td>
+      <td>${p.address || ""}</td>
+      <td>₹${total}</td>
+      <td>₹${paid}</td>
+      <td>₹${balance}</td>
       <td><a href="tel:${p.mobile}">📞 Call</a></td>
-      <td><a target="_blank" href="https://wa.me/91${p.mobile}?text=Dear ${p.name}, aapka repeat test due ho chuka hai. Krishna Health Care Services">💬 WhatsApp</a></td>
-      </tr>`;
-    }
+      <td>
+        <a target="_blank"
+        href="https://wa.me/91${p.mobile}?text=Namaste ${p.name}, aapka test due hai. Krishna Health Care Services">
+        💬 WhatsApp</a>
+      </td>
+    `;
+    tbody.appendChild(tr);
   });
-  document.getElementById("data").innerHTML=out;
+})
+.catch(err => {
+  document.getElementById("tableBody").innerHTML =
+  `<tr><td colspan="11">Error loading data</td></tr>`;
 });
 </script>
 
 </body>
 </html>
-
